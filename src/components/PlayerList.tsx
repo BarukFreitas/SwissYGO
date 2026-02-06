@@ -26,18 +26,18 @@ export function PlayerList({ players, onAdd, onRemove, readOnly = false }: Playe
             <h2 className="text-xl font-bold mb-4 text-white">Jogadores ({players.length})</h2>
 
             {!readOnly && (
-                <form onSubmit={handleSubmit} className="mb-4 flex gap-2">
+                <form onSubmit={handleSubmit} className="mb-4 flex flex-col sm:flex-row gap-2">
                     <input
                         type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
                         placeholder="Nome do Duelista"
-                        className="flex-1 bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-indigo-500 transition-colors"
+                        className="w-full sm:flex-1 bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-indigo-500 transition-colors"
                     />
                     <button
                         type="submit"
                         disabled={!name.trim()}
-                        className="bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                        className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                         Adicionar
                     </button>
@@ -50,7 +50,7 @@ export function PlayerList({ players, onAdd, onRemove, readOnly = false }: Playe
                         key={player.id}
                         className="flex items-center justify-between bg-white/5 px-4 py-3 rounded-lg border border-white/5 hover:border-white/20 transition-all"
                     >
-                        <span className="text-white font-medium">{player.name}</span>
+                        <span className="text-white font-medium truncate min-w-0 flex-1 mr-2">{player.name}</span>
                         {!readOnly && (
                             <button
                                 onClick={() => onRemove(player.id)}

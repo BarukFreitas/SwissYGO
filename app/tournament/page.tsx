@@ -1,14 +1,16 @@
 'use client';
 
-import { use, useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { Suspense, useEffect, useState } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { useTournament } from '@/hooks/useTournament';
 import { PlayerList } from '@/components/PlayerList';
 import { Pairings } from '@/components/Pairings';
 import { Standings } from '@/components/Standings';
 
-export default function TournamentPage({ params }: { params: Promise<{ id: string }> }) {
-    const { id } = use(params);
+
+function TournamentContent() {
+    const searchParams = useSearchParams();
+    const id = searchParams.get('id');
     const router = useRouter();
     const {
         tournament,
@@ -18,7 +20,7 @@ export default function TournamentPage({ params }: { params: Promise<{ id: strin
         startTournament,
         submitMatchResult,
         nextRound
-    } = useTournament(id);
+    } = useTournament(id || '');
 
     const [activeTab, setActiveTab] = useState<'pairings' | 'standings'>('pairings');
     const [rounds, setRounds] = useState(3);
@@ -38,14 +40,17 @@ export default function TournamentPage({ params }: { params: Promise<{ id: strin
     useEffect(() => {
         if (!tournament) return;
         setRounds(recommendedRounds);
-    }, [tournament?.players.length]); // Keep auto-update behavior for now
+    }, [tournament?.players.length]);
 
+    if (!id) return <div className="text-white p-8">ID do torneio não fornecido.</div>;
     if (loading) return <div className="text-white p-8">Carregando...</div>;
     if (!tournament) return <div className="text-white p-8">Torneio não encontrado.</div>;
 
+
+
     return (
-        <div className="min-h-screen bg-gray-900 text-white p-4 md:p-8">
-            <div className="max-w-6xl mx-auto">
+        <div className="min-h-screen bg-gray-900 text-white p-4 md:p-8 overflow-x-hidden max-w-full">
+            <div className="max-w-6xl mx-auto w-full">
                 <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                     <div>
                         <button
@@ -64,8 +69,6 @@ export default function TournamentPage({ params }: { params: Promise<{ id: strin
                         </div>
                     </div>
 
-
-
                     {tournament.status === 'IN_PROGRESS' && (
                         <button
                             onClick={nextRound}
@@ -79,7 +82,7 @@ export default function TournamentPage({ params }: { params: Promise<{ id: strin
                 </header>
 
                 {tournament.status === 'SETUP' ? (
-                    <div className="grid md:grid-cols-2 gap-8">
+                    <div className="grid md:grid-cols-2 gap-8 w-full max-w-[92vw] md:max-w-full mx-auto">
                         <div>
                             <PlayerList
                                 players={tournament.players}
@@ -99,19 +102,19 @@ export default function TournamentPage({ params }: { params: Promise<{ id: strin
                                     <label className="block text-sm font-medium text-gray-300 mb-2">
                                         Número de Rodadas
                                     </label>
-                                    <div className="flex gap-4">
+                                    <div className="flex flex-col sm:flex-row gap-4">
                                         <input
                                             type="number"
                                             min="2"
                                             max="10"
                                             value={rounds}
                                             onChange={(e) => setRounds(parseInt(e.target.value))}
-                                            className="bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white w-24 focus:outline-none focus:border-indigo-500"
+                                            className="w-full sm:w-24 bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-indigo-500"
                                         />
                                         <button
                                             onClick={() => startTournament(rounds)}
                                             disabled={tournament.players.length < 2}
-                                            className="flex-1 bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg font-bold shadow-lg shadow-green-900/20 transition-all hover:scale-105"
+                                            className="w-full sm:flex-1 bg-green-600 hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed text-white px-6 py-2 rounded-lg font-bold shadow-lg shadow-green-900/20 transition-all hover:scale-105"
                                         >
                                             Começar Torneio
                                         </button>
@@ -177,5 +180,13 @@ export default function TournamentPage({ params }: { params: Promise<{ id: strin
                 )}
             </div>
         </div>
+    );
+}
+
+export default function TournamentPage() {
+    return (
+        <Suspense fallback={<div className="text-white p-8">Carregando...</div>}>
+            <TournamentContent />
+        </Suspense>
     );
 }

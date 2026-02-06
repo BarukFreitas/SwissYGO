@@ -20,7 +20,7 @@ export default function Home() {
     e.preventDefault();
     if (!newName.trim()) return;
     const id = createTournament(newName);
-    router.push(`/tournament/${id}`);
+    router.push(`/tournament?id=${id}`);
   };
 
   const handleDelete = (e: React.MouseEvent, id: string) => {
@@ -32,8 +32,8 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-8">
-      <div className="max-w-4xl mx-auto">
+    <div className="min-h-screen bg-gray-900 text-white p-8 overflow-x-hidden max-w-full">
+      <div className="max-w-4xl mx-auto w-full">
         <header className="mb-12 text-center">
           <h1 className="text-5xl font-extrabold bg-gradient-to-r from-indigo-400 to-purple-500 bg-clip-text text-transparent mb-4">
             SwissYGO
@@ -76,7 +76,7 @@ export default function Home() {
               {tournaments.map((t) => (
                 <div
                   key={t.id}
-                  onClick={() => router.push(`/tournament/${t.id}`)}
+                  onClick={() => router.push(`/tournament?id=${t.id}`)}
                   className="group flex justify-between items-center bg-black/20 p-4 rounded-lg cursor-pointer hover:bg-white/10 transition-colors border border-transparent hover:border-white/20"
                 >
                   <div>
