@@ -3,7 +3,7 @@ import { Player } from '@/types/tournament';
 
 interface PlayerListProps {
     players: Player[];
-    onAdd: (name: string) => void;
+    onAdd: (name: string) => boolean;
     onRemove: (id: string) => void;
     readOnly?: boolean;
 }
@@ -14,8 +14,10 @@ export function PlayerList({ players, onAdd, onRemove, readOnly = false }: Playe
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
         if (name.trim()) {
-            onAdd(name.trim());
-            setName('');
+            const success = onAdd(name.trim());
+            if (success) {
+                setName('');
+            }
         }
     };
 

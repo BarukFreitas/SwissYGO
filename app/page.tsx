@@ -53,7 +53,7 @@ export default function Home() {
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
                   className="w-full bg-black/20 border border-white/10 rounded-lg px-4 py-3 text-white focus:outline-none focus:border-indigo-500 transition-colors"
-                  placeholder="Ex: Locals de Sábado"
+                  placeholder="Ex: Semanal de Domingo"
                   required
                 />
               </div>

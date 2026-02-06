@@ -20,11 +20,21 @@ export function useTournament(tournamentId: string) {
         setTournament(updated);
     };
 
-    const addPlayer = (name: string) => {
-        if (!tournament) return;
+    const addPlayer = (name: string): boolean => {
+        if (!tournament) return false;
+
+        const nameExists = tournament.players.some(
+            p => p.name.trim().toLowerCase() === name.trim().toLowerCase()
+        );
+
+        if (nameExists) {
+            alert('Jogador já cadastrado!');
+            return false;
+        }
+
         const newPlayer: Player = {
             id: crypto.randomUUID(),
-            name,
+            name: name.trim(),
             matches: [],
             score: 0,
             omw: 0,
@@ -38,6 +48,7 @@ export function useTournament(tournamentId: string) {
             players: [...tournament.players, newPlayer]
         };
         saveTournament(updated);
+        return true;
     };
 
     const removePlayer = (playerId: string) => {

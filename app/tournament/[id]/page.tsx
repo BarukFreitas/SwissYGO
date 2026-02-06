@@ -23,19 +23,22 @@ export default function TournamentPage({ params }: { params: Promise<{ id: strin
     const [activeTab, setActiveTab] = useState<'pairings' | 'standings'>('pairings');
     const [rounds, setRounds] = useState(3);
 
+    const getRecommendedRounds = (count: number) => {
+        if (count >= 4 && count <= 8) return 3;
+        if (count >= 9 && count <= 16) return 4;
+        if (count >= 17 && count <= 32) return 5;
+        if (count >= 33 && count <= 64) return 6;
+        if (count >= 65 && count <= 128) return 7;
+        if (count > 128) return 8;
+        return 3;
+    }
+
+    const recommendedRounds = tournament ? getRecommendedRounds(tournament.players.length) : 3;
+
     useEffect(() => {
         if (!tournament) return;
-        const count = tournament.players.length;
-        let recommended = 3;
-        if (count >= 4 && count <= 8) recommended = 3;
-        else if (count >= 9 && count <= 16) recommended = 4;
-        else if (count >= 17 && count <= 32) recommended = 5;
-        else if (count >= 33 && count <= 64) recommended = 6;
-        else if (count >= 65 && count <= 128) recommended = 7;
-        else if (count > 128) recommended = 8;
-
-        setRounds(recommended);
-    }, [tournament?.players.length]);
+        setRounds(recommendedRounds);
+    }, [tournament?.players.length]); // Keep auto-update behavior for now
 
     if (loading) return <div className="text-white p-8">Carregando...</div>;
     if (!tournament) return <div className="text-white p-8">Torneio não encontrado.</div>;
@@ -95,7 +98,6 @@ export default function TournamentPage({ params }: { params: Promise<{ id: strin
                                 <div className="mb-2">
                                     <label className="block text-sm font-medium text-gray-300 mb-2">
                                         Número de Rodadas
-                                        <span className="ml-2 text-xs text-white/40">(Sugerido: {rounds})</span>
                                     </label>
                                     <div className="flex gap-4">
                                         <input
