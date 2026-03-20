@@ -28,6 +28,7 @@ export function PlayerList({ players, onAdd, onRemove, readOnly = false }: Playe
             {!readOnly && (
                 <form onSubmit={handleSubmit} className="mb-4 flex flex-col sm:flex-row gap-2">
                     <input
+                        data-testid="player-name-input"
                         type="text"
                         value={name}
                         onChange={(e) => setName(e.target.value)}
@@ -35,6 +36,7 @@ export function PlayerList({ players, onAdd, onRemove, readOnly = false }: Playe
                         className="w-full sm:flex-1 bg-black/20 border border-white/10 rounded-lg px-4 py-2 text-white focus:outline-none focus:border-indigo-500 transition-colors"
                     />
                     <button
+                        data-testid="add-player-button"
                         type="submit"
                         disabled={!name.trim()}
                         className="w-full sm:w-auto bg-indigo-600 hover:bg-indigo-700 text-white px-6 py-2 rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
@@ -44,15 +46,17 @@ export function PlayerList({ players, onAdd, onRemove, readOnly = false }: Playe
                 </form>
             )}
 
-            <ul className="space-y-2 max-h-[400px] overflow-y-auto">
+            <ul data-testid="player-list-container" className="space-y-2 max-h-[400px] overflow-y-auto">
                 {players.map((player) => (
                     <li
                         key={player.id}
+                        data-testid="player-item"
                         className="flex items-center justify-between bg-white/5 px-4 py-3 rounded-lg border border-white/5 hover:border-white/20 transition-all"
                     >
                         <span className="text-white font-medium truncate min-w-0 flex-1 mr-2">{player.name}</span>
                         {!readOnly && (
                             <button
+                                data-testid="remove-player-button"
                                 onClick={() => onRemove(player.id)}
                                 className="text-red-400 hover:text-red-300 p-2 hover:bg-red-400/10 rounded-lg transition-colors"
                                 title="Remover jogador"

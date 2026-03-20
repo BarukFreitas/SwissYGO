@@ -49,6 +49,7 @@ export default function Home() {
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">Nome do Evento</label>
                 <input
+                  data-testid="new-tournament-input"
                   type="text"
                   value={newName}
                   onChange={(e) => setNewName(e.target.value)}
@@ -58,6 +59,7 @@ export default function Home() {
                 />
               </div>
               <button
+                data-testid="create-tournament-button"
                 type="submit"
                 className="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 rounded-lg transition-all transform hover:scale-[1.02]"
               >
@@ -69,13 +71,14 @@ export default function Home() {
 
           <div className="bg-white/5 p-8 rounded-2xl border border-white/10">
             <h2 className="text-2xl font-bold mb-6">Meus Torneios</h2>
-            <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2">
+            <div data-testid="tournament-list-container" className="space-y-3 max-h-[300px] overflow-y-auto pr-2">
               {tournaments.length === 0 && (
                 <p className="text-white/30 italic">Nenhum torneio encontrado.</p>
               )}
               {tournaments.map((t) => (
                 <div
                   key={t.id}
+                  data-testid="tournament-item"
                   onClick={() => router.push(`/tournament?id=${t.id}`)}
                   className="group flex justify-between items-center bg-black/20 p-4 rounded-lg cursor-pointer hover:bg-white/10 transition-colors border border-transparent hover:border-white/20"
                 >
@@ -87,6 +90,7 @@ export default function Home() {
                     </div>
                   </div>
                   <button
+                    data-testid="delete-tournament-button"
                     onClick={(e) => handleDelete(e, t.id)}
                     className="p-2 text-white/20 hover:text-red-400 transition-all"
                     title="Excluir Torneio"

@@ -27,6 +27,7 @@ export function Pairings({ round, players, onSubmitResult, isCurrentRound }: Pai
                     return (
                         <div
                             key={match.id}
+                            data-testid="match-item"
                             className={`relative bg-white/5 border rounded-xl overflow-hidden transition-all ${match.result ? 'border-green-500/30 bg-green-500/5' : 'border-white/10 hover:border-white/20'
                                 }`}
                         >
@@ -40,12 +41,13 @@ export function Pairings({ round, players, onSubmitResult, isCurrentRound }: Pai
                                     )}
                                 </div>
 
-                                <div className="space-y-4">
+                                <div data-testid="match-players-container" className="space-y-4">
 
-                                    <div className={`p-3 rounded-lg flex justify-between items-center transition-all ${match.result === 'P1_WIN' ? 'bg-green-500/20 text-green-400 font-bold border border-green-500/50' : 'bg-black/20 text-white border border-transparent'}`}>
+                                    <div data-testid="player1-container" className={`p-3 rounded-lg flex justify-between items-center transition-all ${match.result === 'P1_WIN' ? 'bg-green-500/20 text-green-400 font-bold border border-green-500/50' : 'bg-black/20 text-white border border-transparent'}`}>
                                         <span>{p1Name}</span>
                                         {isCurrentRound && !isBye && (
                                             <button
+                                                data-testid="p1-win-button"
                                                 onClick={() => onSubmitResult(match.id, 'P1_WIN')}
                                                 className={`text-xs px-4 py-2 rounded-lg font-bold transition-all ${match.result === 'P1_WIN'
                                                     ? 'bg-green-500 text-white shadow-lg shadow-green-900/50'
@@ -64,6 +66,7 @@ export function Pairings({ round, players, onSubmitResult, isCurrentRound }: Pai
 
                                             {isCurrentRound && (
                                                 <button
+                                                    data-testid="double-loss-button"
                                                     onClick={() => onSubmitResult(match.id, 'DOUBLE_LOSS')}
                                                     className={`px-4 py-2 rounded-lg text-xs font-bold transition-all border ${match.result === 'DOUBLE_LOSS'
                                                         ? 'bg-red-500 text-white border-red-400 shadow-lg shadow-red-900/50'
@@ -77,10 +80,11 @@ export function Pairings({ round, players, onSubmitResult, isCurrentRound }: Pai
                                     )}
 
 
-                                    <div className={`p-3 rounded-lg flex justify-between items-center transition-all ${match.result === 'P2_WIN' ? 'bg-green-500/20 text-green-400 font-bold border border-green-500/50' : 'bg-black/20 text-white border border-transparent'}`}>
+                                    <div data-testid="player2-container" className={`p-3 rounded-lg flex justify-between items-center transition-all ${match.result === 'P2_WIN' ? 'bg-green-500/20 text-green-400 font-bold border border-green-500/50' : 'bg-black/20 text-white border border-transparent'}`}>
                                         <span>{p2Name}</span>
                                         {isCurrentRound && !isBye && (
                                             <button
+                                                data-testid="p2-win-button"
                                                 onClick={() => onSubmitResult(match.id, 'P2_WIN')}
                                                 className={`text-xs px-4 py-2 rounded-lg font-bold transition-all ${match.result === 'P2_WIN'
                                                     ? 'bg-green-500 text-white shadow-lg shadow-green-900/50'

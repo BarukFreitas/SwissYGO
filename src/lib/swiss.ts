@@ -57,82 +57,135 @@ export function calculateOMW(player: Player, allPlayers: Player[], rounds: Round
 }
 
 export function generatePairings(tournament: Tournament): Round {
+    // 1. Sort players: Score (Desc) -> OMW (Desc)
+    // We create a shallow copy to avoid mutating the original array during sorting if it's used elsewhere,
+    // though here it's just local.
     const players = [...tournament.players].sort((a, b) => {
         if (a.score !== b.score) return b.score - a.score;
         return b.omw - a.omw;
     });
 
-    const usedPlayers = new Set<string>();
     const matches: Match[] = [];
     const nextRoundNum = tournament.currentRound + 1;
     let tableCounter = 1;
 
+    // Helper to check if two players have already played
+    const hasPlayed = (id1: string, id2: string) => {
+        return tournament.rounds.some(r =>
+            r.matches.some(m =>
+                (m.player1Id === id1 && m.player2Id === id2) ||
+                (m.player1Id === id2 && m.player2Id === id1)
+            )
+        );
+    };
+
+    // 2. Handle Bye if odd number of players
+    // Strict rule: Bye goes to the lowest ranked player who hasn't had one.
     if (players.length % 2 !== 0) {
-        let byeCandidateIndex = players.length - 1;
-        while (byeCandidateIndex >= 0 && players[byeCandidateIndex].hasBye) {
-            byeCandidateIndex--;
+        let byeIndex = players.length - 1;
+        // Find lowest ranked player who hasn't had a bye
+        while (byeIndex >= 0 && players[byeIndex].hasBye) {
+            byeIndex--;
+        }
+        // If everyone has had a bye (rare), fallback to lowest ranked
+        if (byeIndex < 0) {
+            byeIndex = players.length - 1;
         }
 
-        if (byeCandidateIndex < 0) byeCandidateIndex = players.length - 1;
-
-        const byePlayer = players[byeCandidateIndex];
+        const byePlayer = players[byeIndex];
         matches.push({
             id: crypto.randomUUID(),
-            table: 0,
+            table: 0, // 0 usually denotes special/no table
             player1Id: byePlayer.id,
             player2Id: 'BYE',
-            result: 'P1_WIN',
+            result: 'P1_WIN', // Auto-win for bye
             round: nextRoundNum
         });
-        usedPlayers.add(byePlayer.id);
+        // Remove bye player from pooling
+        players.splice(byeIndex, 1);
     }
 
-    const pairablePlayers = players.filter(p => !usedPlayers.has(p.id));
+    // 3. Backtracking Algorithm for Pairings
+    // We need to pair the remaining 'players' list.
+    // 'players' is already sorted by Score -> OMW.
 
-
-
-    while (pairablePlayers.length > 0) {
-        const p1 = pairablePlayers.shift();
-        if (!p1) break;
-
-        let p2Index = 0;
-        let p2 = pairablePlayers[p2Index];
-
-
-
-
-
-        const hasPlayed = (id1: string, id2: string) => {
-            return tournament.rounds.some(r =>
-                r.matches.some(m =>
-                    (m.player1Id === id1 && m.player2Id === id2) ||
-                    (m.player1Id === id2 && m.player2Id === id1)
-                )
-            );
-        };
-
-        while (p2 && hasPlayed(p1.id, p2.id)) {
-            p2Index++;
-            p2 = pairablePlayers[p2Index];
+    function solvePairings(currentPool: Player[]): Match[] | null {
+        if (currentPool.length === 0) {
+            return [];
         }
 
+        // Try to pair the top player (P1)
+        const p1 = currentPool[0];
 
-        if (!p2) {
-            p2 = pairablePlayers[0];
-            p2Index = 0;
+        // Try to find a valid P2 from the rest of the pool
+        for (let i = 1; i < currentPool.length; i++) {
+            const p2 = currentPool[i];
+
+            // Constraint: No repeat matchups
+            if (!hasPlayed(p1.id, p2.id)) {
+                // Tentative pair found.
+                // Create the remainder pool
+                const nextPool = [...currentPool];
+                // Remove p1 (index 0) and p2 (index i)
+                // Note: removing index i first if i > 0 is safe, but we must be careful with indices.
+                // Easier: filter out by ID, but that's O(N).
+                // Since N is small (usually < 100), splicing is fine.
+                nextPool.splice(i, 1); // Remove p2
+                nextPool.splice(0, 1); // Remove p1
+
+                // Recurse
+                const remainingMatches = solvePairings(nextPool);
+                if (remainingMatches !== null) {
+                    // Valid solution found down this path
+                    const currentMatch: Match = {
+                        id: crypto.randomUUID(),
+                        table: 0, // Will assign table numbers later
+                        player1Id: p1.id,
+                        player2Id: p2.id,
+                        round: nextRoundNum
+                    };
+                    return [currentMatch, ...remainingMatches];
+                }
+                // Backtrack: this p2 didn't lead to a full solution
+            }
         }
 
-        // Remove p2 from array
-        pairablePlayers.splice(p2Index, 1);
-
-        matches.push({
-            id: crypto.randomUUID(),
-            table: tableCounter++,
-            player1Id: p1.id,
-            player2Id: p2.id,
-            round: nextRoundNum
-        });
+        // If we reach here, we couldn't find a valid p2 for p1 that leads to a full solution.
+        return null;
     }
+
+    let pairedMatches = solvePairings([...players]);
+
+    // Fallback: If strict pairing fails (impossible constraints), relax "hasPlayed" check?
+    // Or just fallback to a simple greedy pair by score (ignoring repeats) if absolutely necessary?
+    // User requirement: "não podem jogar contra quem já jogaram anteriormente".
+    // If it returns null, it means strictly impossible. 
+    // Usually in Swiss we then try to swap pairs in previous groups, but that's complex.
+    // For now, if null, we might try a relaxed version or just greedy with repeats allowed (worst case).
+    if (!pairedMatches) {
+        console.warn("Could not find strict non-repeat pairings. Falling back to greedy with repeats.");
+        // Fallback: Just pair top-down, allowing repeats if necessary
+        pairedMatches = [];
+        const fallbackPool = [...players];
+        while (fallbackPool.length > 0) {
+            const p1 = fallbackPool.shift()!;
+            const p2 = fallbackPool.shift()!;
+            pairedMatches.push({
+                id: crypto.randomUUID(),
+                table: 0,
+                player1Id: p1.id,
+                player2Id: p2.id,
+                round: nextRoundNum
+            });
+        }
+    }
+
+    // Assign table numbers
+    pairedMatches.forEach((m, index) => {
+        m.table = tableCounter + index;
+    });
+
+    matches.push(...pairedMatches);
 
     return {
         number: nextRoundNum,

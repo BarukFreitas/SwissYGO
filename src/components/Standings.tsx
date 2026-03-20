@@ -23,7 +23,7 @@ export function Standings({ players }: StandingsProps) {
                 </thead>
                 <tbody className="divide-y divide-white/5">
                     {sortedPlayers.map((player, index) => (
-                        <tr key={player.id} className="hover:bg-white/5 transition-colors">
+                        <tr key={player.id} data-testid="standings-row" className="hover:bg-white/5 transition-colors">
                             <td className="px-6 py-4 font-mono text-white/50">{index + 1}</td>
                             <td className="px-6 py-4 font-medium">{player.name}</td>
                             <td className="px-6 py-4 text-right font-bold text-indigo-400">{player.score}</td>
