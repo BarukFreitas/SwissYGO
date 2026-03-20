@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Tournament, Player, MatchResult } from '../types/tournament';
 import { TournamentService } from '../services/storage';
-import { generatePairings, calculatePlayerScore, calculateOMW } from '../lib/swiss';
+import { generatePairings, calculatePlayerScore, calculateOMW, calculateOOMW } from '../lib/swiss';
 
 export function useTournament(tournamentId: string) {
     const [tournament, setTournament] = useState<Tournament | null>(null);
@@ -38,8 +38,7 @@ export function useTournament(tournamentId: string) {
             matches: [],
             score: 0,
             omw: 0,
-            gw: 0,
-            ogw: 0,
+            oomw: 0,
             hasBye: false
         };
 
@@ -119,7 +118,13 @@ export function useTournament(tournamentId: string) {
             return { ...p, omw };
         });
 
-        const updatedTourney = { ...tournament, players: finalPlayers };
+        // Calculamos OOMW após obtermos todos os OMW
+        const withOomwPlayers = finalPlayers.map(p => {
+            const oomw = calculateOOMW(p, finalPlayers, tournament.rounds);
+            return { ...p, oomw };
+        });
+
+        const updatedTourney = { ...tournament, players: withOomwPlayers };
 
         if (tournament.currentRound >= tournament.totalRounds) {
             const finishedTourney = { ...updatedTourney, status: 'FINISHED' as const };

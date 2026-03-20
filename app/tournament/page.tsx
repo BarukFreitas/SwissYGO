@@ -137,7 +137,7 @@ function TournamentContent() {
                         </div>
 
                         <div className="my-8">
-                            <Standings players={tournament.players} />
+                            <Standings players={tournament.players} rounds={tournament.rounds} />
                         </div>
 
                         <div className="flex justify-center">
@@ -181,7 +181,7 @@ function TournamentContent() {
                         )}
 
                         {activeTab === 'standings' && (
-                            <Standings players={tournament.players} />
+                            <Standings players={tournament.players} rounds={tournament.rounds} />
                         )}
                     </div>
                 )}

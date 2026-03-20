@@ -38,7 +38,10 @@ export default function Home() {
           <h1 className="text-5xl font-extrabold bg-gradient-to-r from-indigo-400 to-purple-500 bg-clip-text text-transparent mb-4">
             SwissYGO
           </h1>
-          <p className="text-gray-400 text-lg">Gerenciador de Torneios Yu-Gi-Oh!</p>
+          <p className="text-gray-400 text-lg mb-6">Gerenciador de Torneios Yu-Gi-Oh!</p>
+          <a href="/sobre-omw" className="inline-block text-indigo-400 hover:text-indigo-300 text-sm border border-indigo-500/30 bg-indigo-500/10 px-4 py-2 rounded-full transition-colors font-medium">
+            Entenda como funcionam os desempates matemáticos (OMW%)
+          </a>
         </header>
 
         <div className="grid md:grid-cols-2 gap-8">

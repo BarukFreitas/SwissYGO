@@ -6,8 +6,7 @@ export interface Player {
     matches: string[];
     score: number;
     omw: number;
-    gw: number;
-    ogw: number;
+    oomw: number;
     hasBye: boolean;
 }
 
