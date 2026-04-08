@@ -4,13 +4,21 @@ export default function SobreOMW() {
     return (
         <div className="min-h-screen bg-gray-900 text-white p-8 overflow-x-hidden max-w-full">
             <div className="max-w-3xl mx-auto w-full animate-in fade-in duration-700">
-                <header className="mb-8">
+                <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4 relative">
                     <Link
                         href="/"
-                        className="text-white/40 hover:text-white text-sm mb-4 inline-flex items-center gap-1 transition-colors"
+                        className="text-white/40 hover:text-white text-sm flex items-center gap-1 transition-colors self-start sm:self-auto sm:w-40"
                     >
-                        ← Voltar para o início
+                        ← Voltar ao início
                     </Link>
+                    <div className="flex items-center justify-center gap-3">
+                        <img src="/golden1024.png" alt="SwissYGO" className="w-16 h-16 sm:w-20 sm:h-20 object-contain drop-shadow-[0_0_8px_rgba(255,215,0,0.5)]" />
+                        <span className="font-extrabold text-3xl sm:text-4xl text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-500">SwissYGO</span>
+                    </div>
+                    <div className="hidden sm:block sm:w-40"></div>
+                </div>
+
+                <header className="mb-8">
                     <h1 className="text-4xl font-extrabold bg-gradient-to-r from-indigo-400 to-purple-500 bg-clip-text text-transparent mb-4">
                         Regras de Desempate
                     </h1>

@@ -51,15 +51,23 @@ function TournamentContent() {
     return (
         <div className="min-h-screen bg-gray-900 text-white p-4 md:p-8 overflow-x-hidden max-w-full">
             <div className="max-w-6xl mx-auto w-full">
+                <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4 relative">
+                    <button
+                        data-testid="back-button"
+                        onClick={() => router.push('/')}
+                        className="text-white/40 hover:text-white text-sm flex items-center gap-1 transition-colors self-start sm:self-auto sm:w-40"
+                    >
+                        ← Voltar
+                    </button>
+                    <div className="flex items-center justify-center gap-3">
+                        <img src="/golden1024.png" alt="SwissYGO" className="w-16 h-16 sm:w-20 sm:h-20 object-contain drop-shadow-[0_0_8px_rgba(255,215,0,0.5)]" />
+                        <span className="font-extrabold text-3xl sm:text-4xl text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-purple-500">SwissYGO</span>
+                    </div>
+                    <div className="hidden sm:block sm:w-40"></div>
+                </div>
+
                 <header className="flex flex-col md:flex-row justify-between items-start md:items-center mb-8 gap-4">
                     <div>
-                        <button
-                            data-testid="back-button"
-                            onClick={() => router.push('/')}
-                            className="text-white/40 hover:text-white text-sm mb-2 flex items-center gap-1 transition-colors"
-                        >
-                            ← Voltar
-                        </button>
                         <h1 className="text-3xl font-bold">{tournament.name}</h1>
                         <div className="flex gap-4 mt-2 text-sm text-gray-400">
                             <span>Rodada {tournament.currentRound} de {tournament.totalRounds}</span>

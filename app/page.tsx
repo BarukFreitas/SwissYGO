@@ -35,8 +35,9 @@ export default function Home() {
     <div className="min-h-screen bg-gray-900 text-white p-8 overflow-x-hidden max-w-full">
       <div className="max-w-4xl mx-auto w-full">
         <header className="mb-12 text-center">
-          <h1 className="text-5xl font-extrabold bg-gradient-to-r from-indigo-400 to-purple-500 bg-clip-text text-transparent mb-4">
-            SwissYGO
+          <h1 className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 text-6xl md:text-7xl font-extrabold mb-4">
+            <img src="/golden1024.png" alt="SwissYGO Logo" className="w-32 h-32 sm:w-48 sm:h-48 object-contain drop-shadow-[0_0_15px_rgba(255,215,0,0.4)]" />
+            <span className="bg-gradient-to-r from-indigo-400 to-purple-500 bg-clip-text text-transparent">SwissYGO</span>
           </h1>
           <p className="text-gray-400 text-lg mb-6">Gerenciador de Torneios Yu-Gi-Oh!</p>
           <a href="/sobre-omw" className="inline-block text-indigo-400 hover:text-indigo-300 text-sm border border-indigo-500/30 bg-indigo-500/10 px-4 py-2 rounded-full transition-colors font-medium">
