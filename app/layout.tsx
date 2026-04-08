@@ -15,9 +15,6 @@ const geistMono = Geist_Mono({
 export const metadata: Metadata = {
   title: "SwissYGO",
   description: "Gerenciador de Torneios de Yu-Gi-Oh!",
-  icons: {
-    icon: "/golden1024.png",
-  },
 };
 
 export const viewport: Viewport = {
