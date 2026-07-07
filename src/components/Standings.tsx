@@ -19,18 +19,18 @@ export function Standings({ players, rounds }: StandingsProps) {
                         <th className="px-3 sm:px-6 py-2 sm:py-3 cursor-default">Duelista</th>
                         <th className="px-3 sm:px-6 py-2 sm:py-3 text-right cursor-default">Pts</th>
                         <th className="px-3 sm:px-6 py-2 sm:py-3 text-right">
-                            <a href="/sobre-omw.html" className="hover:text-indigo-300 transition-colors block">
+                            <Link href="/sobre-omw" className="hover:text-indigo-300 transition-colors block">
                                 <span className="border-b border-dashed border-white/40 cursor-help" title="Opponent Match Win % (Média de vitórias dos oponentes enfrentados). Principal desempate.">
                                     OMW%
                                 </span>
-                            </a>
+                            </Link>
                         </th>
                         <th className="px-3 sm:px-6 py-2 sm:py-3 text-right">
-                            <a href="/sobre-omw.html" className="hover:text-purple-300 transition-colors block">
+                            <Link href="/sobre-omw" className="hover:text-purple-300 transition-colors block">
                                 <span className="border-b border-dashed border-white/40 cursor-help" title="Opponent's Opponent Match Win % (Média do OMW% dos oponentes). Último critério matemático de desempate.">
                                     OOMW%
                                 </span>
-                            </a>
+                            </Link>
                         </th>
                     </tr>
                 </thead>

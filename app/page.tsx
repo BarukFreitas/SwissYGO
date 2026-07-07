@@ -5,6 +5,7 @@ import { useRouter } from 'next/navigation';
 import { TournamentService } from '@/services/storage';
 import { Tournament } from '@/types/tournament';
 import { useTournament } from '@/hooks/useTournament';
+import Link from 'next/link';
 
 export default function Home() {
   const router = useRouter();
@@ -32,7 +33,7 @@ export default function Home() {
   };
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white p-8 overflow-x-hidden max-w-full">
+    <div className="min-h-screen bg-gray-900 text-white px-8 overflow-x-hidden max-w-full" style={{ paddingTop: 'max(2rem, env(safe-area-inset-top))', paddingBottom: 'max(2rem, env(safe-area-inset-bottom))' }}>
       <div className="max-w-4xl mx-auto w-full">
         <header className="mb-12 text-center">
           <h1 className="flex flex-col md:flex-row items-center justify-center gap-4 md:gap-6 text-6xl md:text-7xl font-extrabold mb-4">
@@ -40,9 +41,9 @@ export default function Home() {
             <span className="bg-gradient-to-r from-indigo-400 to-purple-500 bg-clip-text text-transparent">SwissYGO</span>
           </h1>
           <p className="text-gray-400 text-lg mb-6">Gerenciador de Torneios Yu-Gi-Oh!</p>
-          <a href="/sobre-omw" className="inline-block text-indigo-400 hover:text-indigo-300 text-sm border border-indigo-500/30 bg-indigo-500/10 px-4 py-2 rounded-full transition-colors font-medium">
+          <Link href="/sobre-omw" className="inline-block text-indigo-400 hover:text-indigo-300 text-sm border border-indigo-500/30 bg-indigo-500/10 px-4 py-2 rounded-full transition-colors font-medium">
             Entenda como funcionam os desempates matemáticos (OMW%)
-          </a>
+          </Link>
         </header>
 
         <div className="grid md:grid-cols-2 gap-8">

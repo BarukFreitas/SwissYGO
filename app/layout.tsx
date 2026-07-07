@@ -22,7 +22,10 @@ export const viewport: Viewport = {
   initialScale: 1,
   maximumScale: 1,
   userScalable: false,
+  viewportFit: "cover",
 };
+
+import CapacitorAppListener from "./CapacitorAppListener";
 
 export default function RootLayout({
   children,
@@ -34,6 +37,7 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <CapacitorAppListener />
         {children}
       </body>
     </html>

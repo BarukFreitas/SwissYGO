@@ -37,5 +37,10 @@ describe('Teste de Desempate OOMW (Mock Determinístico)', () => {
 
         cy.get('[data-testid="standings-row"]').eq(0).find('.bg-purple-400\\/10').should('exist');
         cy.get('[data-testid="standings-row"]').eq(1).find('.bg-purple-400\\/10').should('exist');
+
+        // Click OMW% header to verify link
+        cy.contains('OMW%').click();
+        cy.url().should('include', '/sobre-omw');
+        cy.contains('Regras de Desempate').should('be.visible');
     });
 });

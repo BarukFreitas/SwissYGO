@@ -2,7 +2,7 @@ import Link from 'next/link';
 
 export default function SobreOMW() {
     return (
-        <div className="min-h-screen bg-gray-900 text-white p-8 overflow-x-hidden max-w-full">
+        <div className="min-h-screen bg-gray-900 text-white px-8 overflow-x-hidden max-w-full" style={{ paddingTop: 'max(2rem, env(safe-area-inset-top))', paddingBottom: 'max(2rem, env(safe-area-inset-bottom))' }}>
             <div className="max-w-3xl mx-auto w-full animate-in fade-in duration-700">
                 <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4 relative">
                     <Link

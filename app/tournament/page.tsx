@@ -6,6 +6,7 @@ import { useTournament } from '@/hooks/useTournament';
 import { PlayerList } from '@/components/PlayerList';
 import { Pairings } from '@/components/Pairings';
 import { Standings } from '@/components/Standings';
+import { MatchHistory } from '@/components/MatchHistory';
 
 
 function TournamentContent() {
@@ -22,7 +23,7 @@ function TournamentContent() {
         nextRound
     } = useTournament(id || '');
 
-    const [activeTab, setActiveTab] = useState<'pairings' | 'standings'>('pairings');
+    const [activeTab, setActiveTab] = useState<'pairings' | 'standings' | 'history'>('pairings');
     const [rounds, setRounds] = useState(3);
 
     const getRecommendedRounds = (count: number) => {
@@ -42,6 +43,12 @@ function TournamentContent() {
         setRounds(recommendedRounds);
     }, [tournament?.players.length]);
 
+    useEffect(() => {
+        if (tournament && tournament.status === 'FINISHED' && activeTab === 'pairings') {
+            setActiveTab('standings');
+        }
+    }, [tournament?.status, activeTab]);
+
     if (!id) return <div className="text-white p-8">ID do torneio não fornecido.</div>;
     if (loading) return <div className="text-white p-8">Carregando...</div>;
     if (!tournament) return <div className="text-white p-8">Torneio não encontrado.</div>;
@@ -49,7 +56,7 @@ function TournamentContent() {
 
 
     return (
-        <div className="min-h-screen bg-gray-900 text-white p-4 md:p-8 overflow-x-hidden max-w-full">
+        <div className="min-h-screen bg-gray-900 text-white px-4 md:px-8 overflow-x-hidden max-w-full" style={{ paddingTop: 'max(1rem, env(safe-area-inset-top))', paddingBottom: 'max(1rem, env(safe-area-inset-bottom))' }}>
             <div className="max-w-6xl mx-auto w-full">
                 <div className="flex flex-col sm:flex-row items-center justify-between mb-8 gap-4 relative">
                     <button
@@ -141,14 +148,39 @@ function TournamentContent() {
                             <h2 className="text-4xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-yellow-400 to-orange-500 mb-4">
                                 Torneio Finalizado!
                             </h2>
-                            <p className="text-white/60">Confira a classificação final abaixo</p>
+                            <p className="text-white/60">Confira a classificação final e histórico abaixo</p>
                         </div>
 
-                        <div className="my-8">
-                            <Standings players={tournament.players} rounds={tournament.rounds} />
+                        <div className="flex gap-1 bg-white/5 p-1 rounded-xl w-fit mb-6 mx-auto sm:mx-0">
+                            <button
+                                data-testid="standings-tab"
+                                onClick={() => setActiveTab('standings')}
+                                className={`px-6 py-2 rounded-lg font-medium transition-all ${activeTab === 'standings' ? 'bg-indigo-600 text-white shadow-lg' : 'text-white/60 hover:text-white'}`}
+                            >
+                                Classificação
+                            </button>
+                            <button
+                                data-testid="history-tab"
+                                onClick={() => setActiveTab('history')}
+                                className={`px-6 py-2 rounded-lg font-medium transition-all ${activeTab === 'history' ? 'bg-indigo-600 text-white shadow-lg' : 'text-white/60 hover:text-white'}`}
+                            >
+                                Histórico
+                            </button>
                         </div>
 
-                        <div className="flex justify-center">
+                        {activeTab === 'standings' && (
+                            <div className="my-8">
+                                <Standings players={tournament.players} rounds={tournament.rounds} />
+                            </div>
+                        )}
+
+                        {activeTab === 'history' && (
+                            <div className="my-8">
+                                <MatchHistory players={tournament.players} rounds={tournament.rounds} />
+                            </div>
+                        )}
+
+                        <div className="flex justify-center mt-8">
                             <button
                                 data-testid="return-home-button"
                                 onClick={() => router.push('/')}
@@ -175,6 +207,13 @@ function TournamentContent() {
                             >
                                 Classificação
                             </button>
+                            <button
+                                data-testid="history-tab"
+                                onClick={() => setActiveTab('history')}
+                                className={`px-6 py-2 rounded-lg font-medium transition-all ${activeTab === 'history' ? 'bg-indigo-600 text-white shadow-lg' : 'text-white/60 hover:text-white'}`}
+                            >
+                                Histórico
+                            </button>
                         </div>
 
                         {activeTab === 'pairings' && tournament.rounds.length > 0 && (
@@ -190,6 +229,10 @@ function TournamentContent() {
 
                         {activeTab === 'standings' && (
                             <Standings players={tournament.players} rounds={tournament.rounds} />
+                        )}
+
+                        {activeTab === 'history' && (
+                            <MatchHistory players={tournament.players} rounds={tournament.rounds} />
                         )}
                     </div>
                 )}

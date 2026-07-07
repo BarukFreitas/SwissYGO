@@ -34,4 +34,12 @@ describe('Fluxo do Torneio Yu-Gi-Oh!', () => {
         cy.get('[data-testid="standings-row"]').should('have.length', 6);
     });
 
+    it('deve conseguir navegar para a página de regras de desempate e voltar', () => {
+        cy.contains('Entenda como funcionam os desempates').click();
+        cy.url().should('include', '/sobre-omw');
+        cy.contains('Regras de Desempate').should('be.visible');
+        cy.contains('Voltar ao início').click();
+        cy.url().should('eq', 'http://localhost:3000/');
+    });
+
 });
